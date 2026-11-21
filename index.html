@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UNSMUSLIM</title>
+<style>
+:root{--bg:#fffbe6;--card:#ffffff;--tx:#1d3b53;--mut:#5b7a92;--pri:#8fd0f5;--priD:#5aaee0;--acc:#fff1a8;--bd:#cfe9f8;--hd:linear-gradient(135deg,#bfe5fa,#fff4b8);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1c27;--card:#172a3a;--tx:#e8f3fb;--mut:#9db8cb;--pri:#4f9ccc;--priD:#7cc3ef;--acc:#e8d77a;--bd:#274459;--hd:linear-gradient(135deg,#1c3d57,#3a3a1c)}}
+:root[data-theme="dark"]{--bg:#0f1c27;--card:#172a3a;--tx:#e8f3fb;--mut:#9db8cb;--pri:#4f9ccc;--priD:#7cc3ef;--acc:#e8d77a;--bd:#274459;--hd:linear-gradient(135deg,#1c3d57,#3a3a1c)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6}
+header{background:var(--hd);border-bottom:2px solid var(--bd);padding:14px 16px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.in{max-width:980px;margin:auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+h1{margin:0;font-size:1.6rem;letter-spacing:1px;color:var(--tx)}h1 span{color:var(--priD)}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+nav a,button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 14px;border-radius:999px;text-decoration:none}
+nav a.on,button.p{background:var(--pri);border-color:var(--priD);color:#10293b;font-weight:600}
+button.d{background:#f7b3b3;color:#5a1010;border-color:#e08a8a}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+main{max-width:980px;margin:auto;padding:18px 16px 40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .15s}
+.card:hover{transform:translateY(-3px)}
+.card img,.ph{width:100%;height:160px;object-fit:cover;display:block}
+.ph{background:linear-gradient(135deg,var(--pri),var(--acc))}
+.cb{padding:12px 14px}.cb h3{margin:4px 0}.tag{display:inline-block;background:var(--acc);color:#4a3d00;font-size:.75rem;padding:2px 10px;border-radius:99px}
+.cb p{color:var(--mut);margin:0;font-size:.9rem}
+.art img.m{width:100%;max-height:420px;object-fit:cover;border-radius:16px}
+.art .txt{white-space:pre-wrap;margin:14px 0}
+.sup{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}.sup img{width:100%;height:150px;object-fit:cover;border-radius:12px}
+form{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;display:grid;gap:10px}
+input,textarea,select{font:inherit;width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)}
+textarea{min-height:160px}label{font-weight:600;font-size:.9rem}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pv{display:flex;gap:6px;flex-wrap:wrap}.pv img{width:70px;height:70px;object-fit:cover;border-radius:8px}
+.empty{text-align:center;color:var(--mut);padding:40px 0}footer{text-align:center;color:var(--mut);font-size:.85rem;padding:20px}
+</style>
+</head>
+<body>
+<header><div class="in">
+<div class="top"><h1>UNS<span>MUSLIM</span></h1>
+<div class="tools"><button id="th" title="Siang / Malam">🌙 Malam</button><span id="ad"></span></div></div>
+<nav id="nav"><a href="#beranda" data-r="beranda">Beranda</a><a href="#adab" data-r="adab">Adab dan Akhlak</a><a href="#fikih" data-r="fikih">Fikih Muslimah</a></nav>
+</div></header>
+<main id="app"></main>
+<footer>© UNSMUSLIM — Berbagi ilmu dengan adab</footer>
+<script>
+const CAT={adab:'Adab dan Akhlak',fikih:'Fikih Muslimah'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ls(k,v){try{if(v===undefined){const r=localStorage.getItem(k);return r?JSON.parse(r):null}localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return v===undefined?null:false}}
+let arts=ls('um_arts')||[
+{id:1,cat:'adab',title:'Adab Menuntut Ilmu',main:'',body:'Menuntut ilmu diawali dengan niat yang ikhlas karena Allah, menghormati guru, dan menjaga adab dalam majelis ilmu.\n\nSeorang penuntut ilmu hendaknya rendah hati, sabar, dan mengamalkan apa yang dipelajari.',sup:[]},
+{id:2,cat:'fikih',title:'Menutup Aurat bagi Muslimah',main:'',body:'Menutup aurat adalah kewajiban bagi setiap muslimah yang telah baligh. Pakaian hendaknya longgar, tidak transparan, dan tidak membentuk lekuk tubuh.\n\nSemoga pembahasan ini menjadi pengingat bersama.',sup:[]}];
+let admin=ls('um_admin')===true,edit=null,view=null;
+function save(){if(!ls('um_arts',arts))alert('Penyimpanan penuh. Gunakan foto yang lebih kecil atau hapus artikel lama.')}
+// tema
+function theme(t){document.documentElement.dataset.theme=t;$('#th').textContent=t==='dark'?'☀️ Siang':'🌙 Malam';ls('um_theme',t)}
+theme(ls('um_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#th').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+function bar(){$('#ad').innerHTML=admin?'<button class="p" id="nw">+ Artikel</button> <button id="lo">Keluar</button>':'<button id="li">Login Admin</button>';
+if(admin){$('#nw').onclick=()=>{edit={};view=null;render()};$('#lo').onclick=()=>{admin=false;ls('um_admin',false);edit=null;bar();render()}}
+else $('#li').onclick=()=>{edit='login';view=null;render()}}
+function route(){return(location.hash.slice(1)||'beranda')}
+function card(a){return `<div class="card" data-id="${a.id}">${a.main?`<img src="${a.main}" alt="">`:'<div class="ph"></div>'}<div class="cb"><span class="tag">${CAT[a.cat]}</span><h3>${esc(a.title)}</h3><p>${esc(a.body.slice(0,90))}…</p></div></div>`}
+function render(){
+ const r=route();document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.r===r));
+ const app=$('#app');
+ if(edit==='login')return loginUI(app);
+ if(edit)return formUI(app);
+ if(view){const a=arts.find(x=>x.id===view);if(a)return detail(app,a)}
+ const list=arts.filter(a=>r==='beranda'||a.cat===r);
+ app.innerHTML=`<h2>${r==='beranda'?'Artikel Terbaru':CAT[r]||''}</h2>`+(list.length?`<div class="grid">${list.slice().reverse().map(card).join('')}</div>`:'<div class="empty">Belum ada artikel.</div>');
+ app.querySelectorAll('.card').forEach(c=>c.onclick=()=>{view=+c.dataset.id;render();scrollTo(0,0)});
+}
+function detail(app,a){
+ app.innerHTML=`<div class="art"><button id="bk">← Kembali</button><h2>${esc(a.title)}</h2><span class="tag">${CAT[a.cat]}</span><br><br>${a.main?`<img class="m" src="${a.main}" alt="">`:''}<div class="txt">${esc(a.body)}</div>${a.sup.length?`<h3>Foto Pendukung</h3><div class="sup">${a.sup.map(s=>`<img src="${s}" alt="">`).join('')}</div>`:''}
+ ${admin?`<div class="row"><button class="p" id="ed">Edit</button><button class="d" id="dl">Hapus</button></div>`:''}</div>`;
+ $('#bk').onclick=()=>{view=null;render()};
+ if(admin){$('#ed').onclick=()=>{edit={...a,sup:[...a.sup]};render()};
+ $('#dl').onclick=()=>{if(confirm('Hapus artikel ini?')){arts=arts.filter(x=>x.id!==a.id);save();view=null;render()}}}
+}
+function loginUI(app){
+ app.innerHTML=`<form id="f" style="max-width:380px;margin:auto"><h2 style="margin:0">Login Admin</h2><label>Username</label><input id="u" autocomplete="username"><label>Password</label><input id="pw" type="password" autocomplete="current-password"><div id="er" style="color:#c0392b"></div><div class="row"><button type="submit" class="p">Masuk</button><button type="button" id="cn">Batal</button></div></form>`;
+ $('#f').onsubmit=e=>{e.preventDefault();if($('#u').value==='kilua'&&$('#pw').value==='231112'){admin=true;ls('um_admin',true);edit=null;bar();render()}else $('#er').textContent='Username atau password salah.'};
+ $('#cn').onclick=()=>{edit=null;render()};
+}
+function shrink(file){return new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};im.src=fr.result};fr.readAsDataURL(file)})}
+function formUI(app){
+ const a=edit,isNew=!a.id;
+ app.innerHTML=`<form id="f"><h2 style="margin:0">${isNew?'Tambah':'Edit'} Artikel</h2>
+ <label>Judul Artikel</label><input id="t" required value="${esc(a.title||'')}">
+ <label>Kategori</label><select id="c"><option value="adab">Adab dan Akhlak</option><option value="fikih">Fikih Muslimah</option></select>
+ <label>Foto Utama</label><input id="m" type="file" accept="image/*"><div class="pv" id="pm">${a.main?`<img src="${a.main}">`:''}</div>
+ <label>Detail Artikel</label><textarea id="b" required>${esc(a.body||'')}</textarea>
+ <label>Foto Pendukung (boleh lebih dari satu)</label><input id="s" type="file" accept="image/*" multiple><div class="pv" id="ps">${(a.sup||[]).map(s=>`<img src="${s}">`).join('')}</div>
+ <div class="row"><button class="p" type="submit">Simpan</button><button type="button" id="cn">Batal</button></div></form>`;
+ $('#c').value=a.cat||'adab';
+ $('#m').onchange=async e=>{if(e.target.files[0]){a.main=await shrink(e.target.files[0]);$('#pm').innerHTML=`<img src="${a.main}">`}};
+ $('#s').onchange=async e=>{const n=[];for(const f of e.target.files)n.push(await shrink(f));a.sup=n;$('#ps').innerHTML=n.map(s=>`<img src="${s}">`).join('')};
+ $('#cn').onclick=()=>{edit=null;render()};
+ $('#f').onsubmit=e=>{e.preventDefault();const o={id:a.id||Date.now(),cat:$('#c').value,title:$('#t').value.trim(),main:a.main||'',body:$('#b').value,sup:a.sup||[]};
+ if(isNew)arts.push(o);else arts=arts.map(x=>x.id===o.id?o:x);save();edit=null;view=null;render()};
+}
+addEventListener('hashchange',()=>{view=null;edit=null;render()});
+bar();render();
+</script>
+</body>
+</html>
